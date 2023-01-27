@@ -8,6 +8,8 @@ import { Welcome } from "./Pages/Welcome";
 import { ItemList } from "./Layouts/ItemList";
 import { UserList } from "./Layouts/UserList";
 import { Auth } from "./Layouts/Auth";
+import { PersistLogin } from "./Services/Auth/PersistLogin";
+
 
 export const App = () => {
   return (
@@ -17,12 +19,16 @@ export const App = () => {
           <Route index element={<Public />} />
           <Route path="login" element={<Login />} />
           <Route path="registration" element={<Registration />} />
-          <Route element={<RequireAuth />}>
-            <Route element={<Auth />}>
-              <Route path="welcome" element={<Welcome />} />
-              <Route path="users" element={<UserList />} />
+          //persist login
+          <Route element={<PersistLogin />}>
+            <Route element={<RequireAuth />}>
+              <Route element={<Auth />}>
+                <Route path="welcome" element={<Welcome />} />
+                <Route path="users" element={<UserList />} />
+              </Route>
             </Route>
           </Route>
+          //persist login
         </Route>
       </Routes>
     </div>

@@ -9,6 +9,9 @@ import { authApiSlice, useLoginMutation } from "../Services/Auth/authApiSlice";
 import { tokenReceived } from "../Services/Auth/authSlice";
 import LoadingButton from "@mui/lab/LoadingButton";
 
+
+
+
 const validationSchema = yup.object({
   email: yup
     .string()
@@ -23,8 +26,12 @@ const validationSchema = yup.object({
 
 export const Login = () => {
   const [login, { data, isLoading }] = useLoginMutation();
+  
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+ 
+
+  
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -40,7 +47,9 @@ export const Login = () => {
           tokenReceived({token, user:{email:values.email}})
 
         );
+      
         navigate("/welcome");
+        
       } catch (error) {
         console.log(error);
       }

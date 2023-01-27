@@ -23,5 +23,5 @@ export const useAuth = () => {
     if(isAdmin) roles="admin"
     return { _id, roles, isUser, isAdmin };
   }
-  return { _id: "", roles, isUser, isAdmin };
+  return { _id: "", roles:[], isUser, isAdmin };
 };

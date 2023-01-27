@@ -1,6 +1,5 @@
-import { User } from "../Services/Api/auth";
-import { selectAllUsers, useGetUsersQuery } from "../Services/Users/usersApiSlice";
-
+import { useAppSelector } from "../Services/hooks";
+import { useGetUsersQuery } from "../Services/Users/usersApiSlice";
 
 export const UserList = () => {
   const {
@@ -10,30 +9,34 @@ export const UserList = () => {
     isSuccess,
     isError,
     error,
-  } = useGetUsersQuery(undefined, {
+  } = useGetUsersQuery('userList', {
     pollingInterval: 60000,
     refetchOnFocus: true,
     refetchOnMountOrArgChange: true,
   });
 
-  if (isLoading) return <div>Loading...</div>;
 
-  if (isSuccess) {
-    console.log('sux',users);
-   
-    const { ids } = users;//?
-   console.log(users.ids) 
-
-    
-ids?.length
-      ? ids.map((userId) => console.log(userId))
-      : null;
+  interface UserResponse {
+    map: any;
+    _id: string;
+    email: string;
+    password: string;
+    roles: string[];
   }
+
 
   return (
     <div>
-      {users?.ids} {isFetching ? "...refetching" : ""}
-      
+      {isLoading && <h2>...Loading</h2>}
+      {isFetching && <h2>...Fetching</h2>}
+      {error && <h2>Something went wrong</h2>}
+      {isSuccess && (
+        <div>
+          {users.map((user) => {
+            return <div key={user._id}>{user.email}</div>;
+          })}
+        </div>
+      )}
     </div>
   );
 };

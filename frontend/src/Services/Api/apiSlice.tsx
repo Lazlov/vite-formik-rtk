@@ -44,8 +44,8 @@ const baseQueryWithReauth: BaseQueryFn<
 
       result = await baseQuery(args, api, extraOptions);
     } else {
-      // api.dispatch(logOut());
-      if (refreshResult?.error?.status === 401) {
+      api.dispatch(logOut()); //
+      if (refreshResult?.error?.status === 403) {
        console.log("Your login has expired.") 
     }
     return refreshResult

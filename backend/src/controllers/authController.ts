@@ -12,7 +12,7 @@ const accessToken = (id: any, roles: any) => {
   const payload = { id, roles };
 
   if (secret) {
-    return jwt.sign(payload, secret, { expiresIn: "24h" });
+    return jwt.sign(payload, secret, { expiresIn: "10s" }); //24h
   }
 };
 
@@ -20,7 +20,7 @@ const refreshToken = (id: any) => {
   const payload = { id };
 
   if (secret) {
-    return jwt.sign(payload, secret, { expiresIn: "30d" });
+    return jwt.sign(payload, secret, { expiresIn: "20s" }); //30d
   }
 };
 
@@ -69,7 +69,7 @@ const registration = async (req: Request, res: Response) => {
 };
 const logoutUser = async (req: Request, res: Response) => {
   const cookies = req.cookies;
-  if (cookies?.jwt) return res.sendStatus(204);
+  if (!cookies?.jwt) return res.sendStatus(204); ///???
   res.clearCookie("jwt", {
     httpOnly: true,
     sameSite: "none",
@@ -98,7 +98,7 @@ const getRefreshToken = async (req: Request, res: Response) => {
       refreshToken,
       secret,
       async (err: any, decoded: any) => {
-        if (err) return res.status(403).json({ err: "error" });
+        if (err) return res.status(403).json({ err: "error1" });
         const foundUser = await User.findOne({ _id: decoded.id });
         if (!foundUser) {
           return res.status(401).json({ mssg: "user is not logged in" });

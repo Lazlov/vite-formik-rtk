@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link, Outlet } from 'react-router-dom'
-import { selectCurrentUser } from '../Services/Auth/authSlice'
+ import { selectCurrentUser } from '../Services/Auth/authSlice'
 import { useAppSelector } from '../Services/hooks'
 
 export const Welcome = () => {

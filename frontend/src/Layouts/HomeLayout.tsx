@@ -11,7 +11,7 @@ export const HomeLayout = () => {
   return (
     <div>
       
-    <Products>
+    {/* <Products> */}
       {/* <button onClick={()=>dispatch(add({value:"hh"}))}>add</button> */}
     {/* {isAdmin &&  <AdminLayout />}
     {isUser && <UserLayout />}
