@@ -12,7 +12,7 @@ const accessToken = (id: any, roles: any) => {
   const payload = { id, roles };
 
   if (secret) {
-    return jwt.sign(payload, secret, { expiresIn: "10s" }); //24h
+    return jwt.sign(payload, secret, { expiresIn: "24h" }); //24h
   }
 };
 
@@ -20,7 +20,7 @@ const refreshToken = (id: any) => {
   const payload = { id };
 
   if (secret) {
-    return jwt.sign(payload, secret, { expiresIn: "20s" }); //30d
+    return jwt.sign(payload, secret, { expiresIn: "30d" }); //30d
   }
 };
 
@@ -81,14 +81,14 @@ const logoutUser = async (req: Request, res: Response) => {
 const getRefreshToken = async (req: Request, res: Response) => {
   const cookies = req.cookies;
   if (!cookies?.jwt) {
-    return res.status(401);
+    return res.status(401).json({ message: 'Unauthorized' })
   }
   const refreshToken = cookies.jwt;
-  res.clearCookie("jwt", {
-    httpOnly: true,
-    sameSite: "none",
-    secure: true,
-  });
+  // res.clearCookie("jwt", {
+  //   httpOnly: true,
+  //   sameSite: "none",
+  //   secure: true,
+  // });
   const foundUser = await User.findOne({ refreshToken }).exec();
   if (!foundUser) {
     return res.status(403);

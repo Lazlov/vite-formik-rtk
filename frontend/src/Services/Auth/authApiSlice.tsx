@@ -1,6 +1,19 @@
 import { apiSlice } from "../Api/apiSlice";
-import { LoginRequest, TokenResponse } from "../Api/auth";
+import { LoginRequest, TokenResponse, AuthApiState, User } from "../Api/auth";
 import authSlice, { logOut, tokenReceived } from "./authSlice";
+import { RootState } from "../store";
+import { selectCurrentUser } from "./authSlice";
+import jwtDecode, { JwtPayload } from "jwt-decode";
+interface decodedToken {
+  roles:string,
+  _id:string
+}
+import { useSelector } from "react-redux";
+
+
+
+
+
 
 export const authApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -29,9 +42,11 @@ export const authApiSlice = apiSlice.injectEndpoints({
 
           dispatch(logOut());
           //kosil
-          // setTimeout(()=>{
+          setTimeout(()=>{
           dispatch(apiSlice.util.resetApiState());
-          // })
+         
+          },1000)
+          localStorage.removeItem('username');
         } catch (err) {
           console.log(err);
         }
@@ -45,11 +60,13 @@ export const authApiSlice = apiSlice.injectEndpoints({
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          console.log(data);
-          const { accessToken } = data;
-          //   // tokenReceived({token, user:{email:values.email}})
-          console.log('data')
-          dispatch(tokenReceived(accessToken)); //usera ne znaet
+          console.log('its data',data);
+      
+          const username = JSON.parse(localStorage.getItem("username") || "")
+          console.log(username)
+          dispatch(tokenReceived({token:data,user:{email:username}})); 
+          //usera ne znaet
+          //navigate
         } catch (err) {
           console.log(err);
         }

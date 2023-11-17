@@ -1,5 +1,6 @@
 import { useAppSelector } from "../Services/hooks";
 import { useGetUsersQuery } from "../Services/Users/usersApiSlice";
+import { User } from "./User";
 
 export const UserList = () => {
   const {
@@ -30,13 +31,11 @@ export const UserList = () => {
       {isLoading && <h2>...Loading</h2>}
       {isFetching && <h2>...Fetching</h2>}
       {error && <h2>Something went wrong</h2>}
-      {isSuccess && (
-        <div>
-          {users.map((user) => {
-            return <div key={user._id}>{user.email}</div>;
-          })}
-        </div>
-      )}
+      {isSuccess && <div>
+        {users.map(user=>{return <User key={user._id}  id={user._id} email={user.email}/>})}
+      </div>
+      }
+      
     </div>
   );
 };

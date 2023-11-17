@@ -48,7 +48,8 @@ export const Login = () => {
 
         );
       
-        navigate("/welcome");
+        navigate("/d/welcome");
+        localStorage.setItem("username", JSON.stringify(values.email))
         
       } catch (error) {
         console.log(error);

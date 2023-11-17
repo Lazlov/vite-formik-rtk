@@ -8,8 +8,7 @@ export const Welcome = () => {
   return (
     <div>
       <h1>Welcome {`${user?.email}`}</h1>
-         <Link to="/">Home</Link>
-         <Link to="/users">users</Link>
+        
          {/* <Outlet/> */}
       </div>
   )

@@ -8,7 +8,7 @@ export const Public = () => {
       <nav>
         {/* <Link to="/registration">Registration</Link> | <Link to="/login">Login</Link> */}
         <ItemList/>
-        <Outlet />
+        
       </nav>
     </div>
   );

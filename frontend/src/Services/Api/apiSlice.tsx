@@ -9,13 +9,11 @@ import type {
   FetchBaseQueryError,
 } from "@reduxjs/toolkit/query";
 
-
 const baseQuery = fetchBaseQuery({
   baseUrl: "http://localhost:4000/api",
   credentials: "include",
   prepareHeaders: (headers, { getState }) => {
     const token = (getState() as RootState).auth.token;
-   
 
     // If we have a token set in state, let's assume that we should be passing it.
     if (token) {
@@ -38,7 +36,7 @@ const baseQueryWithReauth: BaseQueryFn<
     if (refreshResult.data) {
       const token = refreshResult.data as TokenResponse;
 
-      const email = (api.getState() as AuthApiState).user.email;
+      const email = (api.getState() as AuthApiState).user.email; //meibi ne znaet i nado brat' iz local
 
       api.dispatch(tokenReceived({ token, user: { email } }));
 
@@ -46,9 +44,9 @@ const baseQueryWithReauth: BaseQueryFn<
     } else {
       api.dispatch(logOut()); //
       if (refreshResult?.error?.status === 403) {
-       console.log("Your login has expired.") 
-    }
-    return refreshResult
+        console.log("Your login has expired.");
+      }
+      return refreshResult;
     }
   }
   return result;
@@ -61,7 +59,7 @@ export const apiSlice = createApi({
   reducerPath: "api",
   // All of our requests will have URLs starting with '/fakeApi'
   baseQuery: baseQueryWithReauth,
-  tagTypes: ['Product', 'User'],
+  tagTypes: ["Product", "User"],
   // The "endpoints" represent operations and requests for this server
   endpoints: (builder) => ({}),
 });
