@@ -1,6 +1,6 @@
 import { useAppSelector } from "../Services/hooks";
 import { useGetUsersQuery } from "../Services/Users/usersApiSlice";
-import { User } from "./User";
+import { User } from "./User copy";
 
 export const UserList = () => {
   const {
