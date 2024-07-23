@@ -6,29 +6,27 @@ import { add } from "../Services/Slices/cartSlice";
 import { useAuth } from "../Components/useAuth";
 import { Link, Outlet } from "react-router-dom";
 import { GlobalNav } from "../Layouts/GlobalNav";
-import { GlobalFooter } from "../Layouts/GlobalFooter";
+
+// import { GlobalFooter } from "../Layouts/GlobalFooter";
+import { Footer } from "../Layouts/GlobalFooterChatGpt";
+
 import { GlobalMain } from "../Layouts/GlobalMain";
+import { Box, Container, CssBaseline } from "@mui/material";
+import { GlobalFooter } from "../Layouts/GlobalFooter";
 
 export const Layout = () => {
   const dispatch = useAppDispatch();
-  const {_id, roles, isUser, isAdmin} = useAuth()
+  const { _id, roles, isUser, isAdmin } = useAuth();
   return (
-    <div>
-        <GlobalNav/>
-        {/* <GlobalMain/> */}
-        <Outlet/>
-        <GlobalFooter/>
-        
-         {/* <Link to="/login">Login</Link> |{" "}
-        <Link to="/registration">Registration</Link> */}
-        
-      {/* <button onClick={()=>dispatch(add({value:"hh"}))}>add</button> */}
-
-    {/* {isAdmin &&  <AdminLayout />}
-    {isUser && <UserLayout />}
-     {!isAdmin && !isUser && <Public/>}
-      {_id}
-      {roles} */}
-    </div>
+    <Box
+      sx={{display: "flex"}}
+    >
+      <CssBaseline />
+      <GlobalNav />
+     <Box component="main" sx={{ p: 3 }} width="100%">
+     <Outlet />
+     </Box>
+      
+    </Box>
   );
 };

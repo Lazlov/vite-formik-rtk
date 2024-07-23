@@ -2,6 +2,10 @@ import { Button, TextField, Box } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
 import { useFormik } from "formik";
 import * as yup from "yup";
+import { useCreateUserMutation } from "../Services/Users/usersApiSlice";
+import { useNavigate } from "react-router-dom";
+
+
 
 // const validationSchema = yup.object({
 //   email: yup
@@ -21,6 +25,11 @@ import * as yup from "yup";
 // });
 
 export const Registration = () => {
+
+  const [createUser, { isLoading: isCreating }] = useCreateUserMutation();
+  const navigate = useNavigate();
+ 
+
   const validationSchema = yup.object().shape({
     email: yup
       .string()
@@ -50,14 +59,24 @@ export const Registration = () => {
       password_: "",
     },
     validationSchema: validationSchema,
-    onSubmit: (values) => {
-      alert(JSON.stringify(values, null, 2));
+    onSubmit: async (values) => {
+      try {
+        const payload = await createUser({ email: values.email, password: values.password }).unwrap();
+        console.log('fulfilled', payload)
+      } catch (error) {
+        console.error('rejected', error);
+      } finally{
+        // localStorage.setItem("username", JSON.stringify(values.email))
+        navigate("/login")
+      }
+      // createUser(values)
+      // alert(JSON.stringify(values, null, 2));
     },
   });
 
   return (
     <div>
-      <Box component="form" onSubmit={formik.handleSubmit}>
+      <Box component="form"  onSubmit={formik.handleSubmit}>
         <Grid
           container
           height="100vh"
@@ -107,7 +126,7 @@ export const Registration = () => {
             />
           </Grid>
           <Grid xs={3}>
-            <Button color="primary" variant="contained" fullWidth type="submit">
+            <Button color="primary" variant="contained" fullWidth type="submit" disabled={isCreating}>
               Submit
             </Button>
           </Grid>

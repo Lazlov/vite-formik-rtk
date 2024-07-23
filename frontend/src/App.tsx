@@ -14,6 +14,7 @@ import { Layout } from "./Pages/Layout";
 import { useAppSelector } from "./Services/hooks";
 import { selectCurrentToken } from "./Services/Auth/authSlice";
 import { useSelector } from "react-redux";
+import { Box } from "@mui/material";
 
 export const App = () => {
   const token = useSelector(selectCurrentToken);

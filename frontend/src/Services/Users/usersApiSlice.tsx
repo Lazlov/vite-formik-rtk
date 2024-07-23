@@ -7,6 +7,8 @@ import { FetchBaseQueryError } from "@reduxjs/toolkit/dist/query";
 interface User {
   id: string;
   email: string;
+  password?:string;
+  roles?:string[]
 }
 
 interface UserResponse {
@@ -14,7 +16,7 @@ interface UserResponse {
   _id: string;
   email: string;
   password: string;
-  roles: string[];
+  roles?: string[];
 }
 
 // const usersAdapter = createEntityAdapter<User>({
@@ -23,7 +25,22 @@ interface UserResponse {
 // const initialState = usersAdapter.getInitialState();
 
 export const usersApiSlice = apiSlice.injectEndpoints({
+  
   endpoints: (builder) => ({
+    createUser: builder.mutation<User, Partial<User>>({
+      query(body) {
+        return {
+          url: `/users`,
+          method: 'POST',
+          body,
+        }
+      },
+      // Invalidates all Post-type queries providing the `LIST` id - after all, depending of the sort order,
+      // that newly created post could show up in any lists.
+      invalidatesTags: [{ type: 'User', id: 'LIST' }],
+    }),
+
+
     // getUsers: builder.query<EntityState<User[]>, void>({
     getUsers: builder.query<UserResponse[], string>({
       query: () => ({
@@ -50,7 +67,7 @@ export const usersApiSlice = apiSlice.injectEndpoints({
           // }
       }),
       providesTags: (result) =>
-      result ? result.map(({ _id }) => ({ type: 'User', _id })) : ['User'],
+      result ? result.map(({ _id }) => ({ type: 'User', _id })as const) : ['User'],
  
     }),
     updateUser: builder.mutation<User, Partial<User> & Pick<User, "id">>({
@@ -61,17 +78,18 @@ export const usersApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: (result, error, arg) => [{ type: "User", id: arg.id }],
     }),
-    deleteUser: builder.mutation<User, Partial<User> & Pick<User, "id">>({
-      query: ({ id, ...deleteUser }) => ({
+    deleteUser: builder.mutation<{ success: boolean; id: string }, string>({
+      query: (id) => ({
         url: `users/${id}`,
         method: "DELETE",
-        body: deleteUser,
+        
       }),
-      invalidatesTags: (result, error, arg) => [{ type: "User", id: arg.id }],
+      invalidatesTags: (result, error, id) => [{ type: 'User', id }],
     }),
   }),
 });
 export const {
+  useCreateUserMutation,
   useGetUsersQuery,
   useDeleteUserMutation,
   useUpdateUserMutation,

@@ -1,4 +1,4 @@
-import { Button, TextField, Box } from "@mui/material";
+import { Button, TextField, Box, CssBaseline, Container } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
 import { useFormik } from "formik";
 import * as yup from "yup";
@@ -8,6 +8,7 @@ import { useDispatch } from "react-redux";
 import { authApiSlice, useLoginMutation } from "../Services/Auth/authApiSlice";
 import { tokenReceived } from "../Services/Auth/authSlice";
 import LoadingButton from "@mui/lab/LoadingButton";
+
 
 
 
@@ -58,8 +59,9 @@ export const Login = () => {
   });
 
   return (
-    <div>
+    <Container component="main" >
       <Box component="form" method="POST" onSubmit={formik.handleSubmit}>
+        
         <Grid
           container
           height="100vh"
@@ -106,6 +108,6 @@ export const Login = () => {
           </Grid>
         </Grid>
       </Box>
-    </div>
+      </Container>
   );
 };
