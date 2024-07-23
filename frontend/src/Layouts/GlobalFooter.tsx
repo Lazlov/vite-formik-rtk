@@ -21,6 +21,7 @@ export const GlobalFooter = () => {
       // component="footer"
       component="footer"
     sx={{
+      width: '100%',
       py: 3,
       px: 2,
       mt: 'auto',

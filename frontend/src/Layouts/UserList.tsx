@@ -1,7 +1,7 @@
 import { Box, List } from "@mui/material";
 import { useAppSelector } from "../Services/hooks";
 import { useGetUsersQuery } from "../Services/Users/usersApiSlice";
-import { User } from "./User copy";
+import { User } from "./User";
 
 
 export const UserList = () => {

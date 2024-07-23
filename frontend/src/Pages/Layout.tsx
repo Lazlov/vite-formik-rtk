@@ -7,10 +7,10 @@ import { useAuth } from "../Components/useAuth";
 import { Link, Outlet } from "react-router-dom";
 import { GlobalNav } from "../Layouts/GlobalNav";
 
-// import { GlobalFooter } from "../Layouts/GlobalFooter";
-import { Footer } from "../Layouts/GlobalFooterChatGpt";
 
-import { GlobalMain } from "../Layouts/GlobalMain";
+// import { Footer } from "../Layouts/GlobalFooterChatGpt";
+
+
 import { Box, Container, CssBaseline } from "@mui/material";
 import { GlobalFooter } from "../Layouts/GlobalFooter";
 

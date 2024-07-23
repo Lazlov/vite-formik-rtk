@@ -2,11 +2,11 @@ import React, { useState } from "react";
 import {
   useUpdateUserMutation,
   useDeleteUserMutation,
+  useGetUsersQuery,
 } from "../Services/Users/usersApiSlice";
 import { useNavigate } from "react-router-dom";
-import { Button, TextField, Box, ButtonGroup } from "@mui/material";
-import { Delete } from '@mui/icons-material';
-
+import { Button, TextField, Box, ButtonGroup, Input, ListItem } from "@mui/material";
+import { Delete } from "@mui/icons-material";
 
 import Grid from "@mui/material/Unstable_Grid2";
 import { useFormik } from "formik";
@@ -17,100 +17,70 @@ import { useDispatch } from "react-redux";
 import { authApiSlice, useLoginMutation } from "../Services/Auth/authApiSlice";
 import { tokenReceived } from "../Services/Auth/authSlice";
 import LoadingButton from "@mui/lab/LoadingButton";
+import { EditUserForm } from "./EditUserForm";
 
-
-
-export const User: React.FC<{id:string, email: string }> = ( {id,email} ) => {
-  const [editUser, setEditUser] = useState(false);
-  const [removeUser, setRemoveUser] = useState(false);
-  const [input, setInput] = useState(email);
-
- 
-
-  // {id,deletedUser}
+export const User: React.FC<{ id: string; email: string }> = ({
+  id,
+  email,
+}) => {
+  const navigate = useNavigate();
+  const { data: user, isLoading } = useGetUsersQuery(id);
   const [updateUser, { isLoading: isUpdating }] = useUpdateUserMutation();
   const [deleteUser, { isLoading: isDeleting }] = useDeleteUserMutation();
+  // const [input, setInput] = useState(email);
+  const [isEditing, setIsEditing] = useState(false);
 
-  const navigate = useNavigate();
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
-  // const EditableUser = ({
-  //   user: initialName,
-  //   onUpdate,
-  //   onCancel,
-  //   isLoading = false,
-  // }: {
-  //   user: string
-  //   onUpdate: (user: string) => void
-  //   onCancel: () => void
-  //   isLoading?: boolean
-  // }) => {
-  //   const [user, setUser] = useState(initialName)
-  // // const handleUpdate = async () =>{
-  // //     try {
-  // //       updateUser({id, data })
+  if (!user) {
+    return (
+      <div>
+        User {id} is missing! Try reloading or selecting another user...
+      </div>
+    );
+  }
 
-  // //     } catch (error) {
 
-  // //     }
-  // // }
-  // const handleUpdate = () => navigate("/dash/users/userdid");
-  // const handleDelete = () => navigate("/dash/users/userdid");
-  const handleEdit = () => {
-    setEditUser(!editUser);
-  };
-  const handleRemove = () => {
-    setRemoveUser(!removeUser);
-  };
-  const handleConfirmDelete = async ({id:id}) => {
-   await  updateUser({id});
-   console.log(id,email)
-  };
-  const handleConfirmUpdate = async () => {
-   await deleteUser({id,email:input});
-   console.log(id,email)
-  };
-
-  const handleInput = () => {};
   return (
-    <div>
-      
-      
-{!editUser && <h2>{email}</h2> }
-        
-          {" "}
-          {!removeUser && editUser && (
-            <TextField
-              type="text"
-              value={email}
-              onChange={handleInput}
-            ></TextField>
-
-
-          )}
-
-<ButtonGroup>
+    
+      <ListItem>
        
-          {!removeUser && !editUser && (
-            <Button onClick={handleEdit}>edit</Button>
+       
+          {isEditing ? (
+            <EditUserForm
+              email={email}
+              onUpdate={async (value) => {
+                try{await updateUser({ id, email:value }).unwrap();}
+                catch {
+                  console.log('An error occurred')
+                 
+                } 
+                finally{setIsEditing(false);}
+              }}
+              onCancel={() => setIsEditing(false)}
+              isLoading={isUpdating}
+            />
+          ) : (
+            <ButtonGroup>
+              <div>{email}</div>
+              <Button
+                onClick={() => setIsEditing(true)}
+                disabled={isDeleting || isUpdating}
+              >
+                {isUpdating ? "Updating..." : "Edit1"}
+              </Button>
+              <Button
+                onClick={() => deleteUser(id).then(() => navigate('d/users'))}
+                disabled={isDeleting}
+              >
+                {isDeleting ? "Deleting..." : "Delete2"}
+              </Button>
+            </ButtonGroup>
           )}
-        
-
-        <ButtonGroup variant="text" >
-          {editUser && <Button onClick={handleConfirmUpdate}>confirm</Button>}
-          {editUser && <Button onClick={handleEdit}>cancel</Button>}
-        </ButtonGroup>
-      
-
-      
-        {!editUser && !removeUser && (
-          <Button onClick={handleRemove} startIcon={<Delete/>}>delete</Button>
-        )}
-        <ButtonGroup variant="text" >{removeUser && <Button onClick={handleConfirmDelete}>confirm</Button>}
-        {removeUser && <Button onClick={handleRemove}>cancel</Button>}</ButtonGroup>
-        
-        
-        </ButtonGroup>
-     
-    </div>
+       
+      </ListItem>
+   
   );
 };
